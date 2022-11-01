@@ -1,0 +1,267 @@
+## This file contains all the build statements describing the
+# compilation DAG.
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# 
+# Which is the root file.
+# =============================================================================
+
+# =============================================================================
+# Project: fastwfc
+# Configurations: Debug
+# =============================================================================
+
+#############################################
+# Minimal version of Ninja required by this file
+
+ninja_required_version = 1.5
+
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
+# =============================================================================
+# Include auxiliary files.
+
+
+#############################################
+# Include rules file.
+
+include CMakeFiles/rules.ninja
+
+# =============================================================================
+
+#############################################
+# Logical path to working directory; prefix for absolute paths.
+
+cmake_ninja_workdir = /Users/yinzi/fast-wfc/
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target fastwfc_static
+
+
+#############################################
+# Order-only phony target for fastwfc_static
+
+build cmake_object_order_depends_target_fastwfc_static: phony || CMakeFiles/fastwfc_static.dir
+
+build CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/wave.cpp || cmake_object_order_depends_target_fastwfc_static
+  DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc_static.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
+
+build CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/propagator.cpp || cmake_object_order_depends_target_fastwfc_static
+  DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc_static.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
+
+build CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/wfc.cpp || cmake_object_order_depends_target_fastwfc_static
+  DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc_static.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target fastwfc_static
+
+
+#############################################
+# Link the static library lib/libfastwfc_static.a
+
+build lib/libfastwfc_static.a: CXX_STATIC_LIBRARY_LINKER__fastwfc_static_Debug CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
+  LANGUAGE_COMPILE_FLAGS = -g
+  OBJECT_DIR = CMakeFiles/fastwfc_static.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = lib/libfastwfc_static.a
+  TARGET_PDB = fastwfc_static.a.dbg
+
+# =============================================================================
+# Object build statements for SHARED_LIBRARY target fastwfc
+
+
+#############################################
+# Order-only phony target for fastwfc
+
+build cmake_object_order_depends_target_fastwfc: phony || CMakeFiles/fastwfc.dir
+
+build CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/wave.cpp || cmake_object_order_depends_target_fastwfc
+  DEFINES = -Dfastwfc_EXPORTS
+  DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
+
+build CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/propagator.cpp || cmake_object_order_depends_target_fastwfc
+  DEFINES = -Dfastwfc_EXPORTS
+  DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
+
+build CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/wfc.cpp || cmake_object_order_depends_target_fastwfc
+  DEFINES = -Dfastwfc_EXPORTS
+  DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  INCLUDES = -I/Users/yinzi/fast-wfc/src/include
+  OBJECT_DIR = CMakeFiles/fastwfc.dir
+  OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
+
+
+# =============================================================================
+# Link build statements for SHARED_LIBRARY target fastwfc
+
+
+#############################################
+# Link the shared library lib/libfastwfc.1.0.0.dylib
+
+build lib/libfastwfc.1.0.0.dylib: CXX_SHARED_LIBRARY_LINKER__fastwfc_Debug CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
+  INSTALLNAME_DIR = @rpath/
+  LANGUAGE_COMPILE_FLAGS = -g
+  LINK_FLAGS = -L/opt/homebrew/opt/openblas/lib   -compatibility_version 1.0.0 -current_version 1.0.0
+  OBJECT_DIR = CMakeFiles/fastwfc.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  SONAME = libfastwfc.1.dylib
+  SONAME_FLAG = -install_name
+  TARGET_FILE = lib/libfastwfc.1.0.0.dylib
+  TARGET_PDB = fastwfc.dylib.dbg
+
+
+#############################################
+# Create library symlink lib/libfastwfc.dylib
+
+build lib/libfastwfc.1.dylib lib/libfastwfc.dylib: CMAKE_SYMLINK_LIBRARY lib/libfastwfc.1.0.0.dylib
+  POST_BUILD = :
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/yinzi/fast-wfc && /opt/homebrew/Cellar/cmake/3.24.2/bin/ccmake -S/Users/yinzi/fast-wfc -B/Users/yinzi/fast-wfc
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/yinzi/fast-wfc && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake --regenerate-during-build -S/Users/yinzi/fast-wfc -B/Users/yinzi/fast-wfc
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build CMakeFiles/install.util: CUSTOM_COMMAND all
+  COMMAND = cd /Users/yinzi/fast-wfc && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build install: phony CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+  COMMAND = cd /Users/yinzi/fast-wfc && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install/local: phony CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
+  COMMAND = cd /Users/yinzi/fast-wfc && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build install/strip: phony CMakeFiles/install/strip.util
+
+# =============================================================================
+# Target aliases.
+
+build fastwfc: phony lib/libfastwfc.dylib
+
+build fastwfc_static: phony lib/libfastwfc_static.a
+
+build libfastwfc.dylib: phony lib/libfastwfc.dylib
+
+build libfastwfc_static.a: phony lib/libfastwfc_static.a
+
+# =============================================================================
+# Folder targets.
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/yinzi/fast-wfc
+
+build all: phony lib/libfastwfc_static.a lib/libfastwfc.dylib
+
+# =============================================================================
+# Built-in targets
+
+
+#############################################
+# Re-run CMake if any of its inputs changed.
+
+build build.ninja: RERUN_CMAKE | /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/GNUInstallDirs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake CMakeLists.txt
+  pool = console
+
+
+#############################################
+# A missing CMake input file is not an error.
+
+build /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/GNUInstallDirs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake CMakeLists.txt: phony
+
+
+#############################################
+# Clean all the built files.
+
+build clean: CLEAN
+
+
+#############################################
+# Print all primary targets available.
+
+build help: HELP
+
+
+#############################################
+# Make the all target the default.
+
+default all

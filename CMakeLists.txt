@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.9)
 project(fastwfc VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(DEFAULT_BUILD_TYPE "Release")
+#set(DEFAULT_BUILD_TYPE "Release")
+set(DEFAULT_BUILD_TYPE "Debug")
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")

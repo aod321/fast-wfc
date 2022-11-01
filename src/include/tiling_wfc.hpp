@@ -219,6 +219,10 @@ public:
    */
   unsigned width;
 
+  Wave get_wave() {
+      return wfc.get_wave();
+  }
+
 private:
 
   /**
@@ -396,6 +400,16 @@ public:
     }
     return id_to_tiling(*a);
   }
+
+  std::optional<Array2D<T>> mutate(Wave base_wave, double new_weight) {
+        wfc.mutate(base_wave, new_weight);
+        auto a = wfc.run();
+        if (a == std::nullopt) {
+            return std::nullopt;
+        }
+        return id_to_tiling(*a);
+  }
+
 };
 
 #endif // FAST_WFC_TILING_WFC_HPP_

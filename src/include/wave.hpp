@@ -25,6 +25,9 @@ struct EntropyMemoisation {
  */
 class Wave {
 private:
+
+    Array2D<double> cell_partterns_weights;       // The parten weights of the cell.
+    Array2D<double> normalized_cell_partterns_weights;       // The parten weights of the cell.
   /**
    * The patterns frequencies p given to wfc.
    */
@@ -76,6 +79,24 @@ public:
    */
   Wave(unsigned height, unsigned width,
        const std::vector<double> &patterns_frequencies) noexcept;
+
+  Array2D<double> get_cell_partterns_weights() const noexcept {
+    return cell_partterns_weights;
+  }
+
+  Array2D<double> & get_cell_partterns_weights() noexcept {
+        return cell_partterns_weights;
+    }
+
+  Array2D<double> get_normlized_cell_partterns_weights() const noexcept {
+    return normalized_cell_partterns_weights;
+  }
+
+  Array2D<double> & get_normlized_cell_partterns_weights() noexcept {
+        return normalized_cell_partterns_weights;
+  }
+
+  void set_cell_partterns_weights(Array2D<double> weights) noexcept;
 
   /**
    * Return true if pattern can be placed in cell index.

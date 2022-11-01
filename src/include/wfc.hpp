@@ -21,8 +21,6 @@ private:
   /**
    * The distribution of the patterns as given in input.
    */
-  const std::vector<double> patterns_frequencies;
-
   /**
    * The wave, indicating which patterns can be put in which cell.
    */
@@ -54,10 +52,17 @@ public:
       unsigned wave_width)
     noexcept;
 
+
+  Wave get_wave() const noexcept {
+    return wave;
+  }
+
   /**
    * Run the algorithm, and return a result if it succeeded.
    */
   std::optional<Array2D<unsigned>> run() noexcept;
+
+  void mutate(Wave base_wave, double new_weight) noexcept;
 
   /**
    * Return value of observe.

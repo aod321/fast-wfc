@@ -3,6 +3,19 @@
 #include <limits>
 
 namespace {
+    /**
+ * Normalize a vector so the sum of its elements is equal to 1.0f
+ */
+    std::vector<double>& normalize(std::vector<double> v) {
+        double sum = 0.0;
+        for (auto& e : v) {
+            sum += e;
+        }
+        for (auto& e : v) {
+            e /= sum;
+        }
+        return v;
+    }
 
 /**
  * Return distribution * log(distribution).
@@ -36,6 +49,8 @@ Wave::Wave(unsigned height, unsigned width,
     min_abs_half_plogp(get_min_abs_half(plogp_patterns_frequencies)),
     is_impossible(false), nb_patterns(patterns_frequencies.size()),
     data(width * height, nb_patterns, 1), width(width), height(height),
+    cell_partterns_weights(width * height, patterns_frequencies.size()),
+    normalized_cell_partterns_weights(width * height, patterns_frequencies.size()),
     size(height * width) {
   // Initialize the memoisation of entropy.
   double base_entropy = 0;
@@ -52,8 +67,28 @@ Wave::Wave(unsigned height, unsigned width,
   memoisation.nb_patterns =
     std::vector<unsigned>(width * height, static_cast<unsigned>(nb_patterns));
   memoisation.entropy = std::vector<double>(width * height, entropy_base);
+  auto normalized_patterns_frequencies = normalize(patterns_frequencies);
+  for (unsigned i = 0; i < width * height; i++) {
+    for (unsigned j = 0; j < nb_patterns; j++) {
+        cell_partterns_weights.get(i, j) = patterns_frequencies[j];
+        normalized_cell_partterns_weights.get(i, j) = normalized_patterns_frequencies[j];
+    }
+  }
 }
 
+void Wave::set_cell_partterns_weights(Array2D<double> weights) noexcept{
+    cell_partterns_weights = weights;
+    for (unsigned i = 0; i < width * height; i++) {
+        std::vector<double> normalized_weights;
+        for (unsigned j = 0; j < nb_patterns; j++) {
+            normalized_weights.push_back(cell_partterns_weights.get(i, j));
+        }
+        normalized_weights = normalize(normalized_weights);
+        for (unsigned j = 0; j < nb_patterns; j++) {
+            normalized_cell_partterns_weights.get(i, j) = normalized_weights[j];
+        }
+    }
+}
 
 void Wave::set(unsigned index, unsigned pattern, bool value) noexcept {
   bool old_value = data.get(index, pattern);
