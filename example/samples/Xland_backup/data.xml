@@ -1,0 +1,88 @@
+<set size="48">
+    <tiles>
+<!-- 1gray 2blue 3yellow 4orange 5red 6white -->
+        <tile name="cube_gray" symmetry="X" weight="1.0"/>
+        <tile name="cube_blue" symmetry="X" weight="1.0"/>
+<!--        <tile name="cube_yellow" symmetry="X" weight="1.0"/>-->
+<!--        <tile name="cube_orange" symmetry="X" weight="1.0"/>-->
+<!--        <tile name="cube_red" symmetry="X" weight="1.0"/>-->
+<!--        <tile name="cube_white" symmetry="X" weight="1.0"/>-->
+        <tile name="corner_blue_gray" symmetry="L" weight="1.0"/>
+<!--        <tile name="corner_yellow_blue" symmetry="L" weight="1.0"/>-->
+<!--        <tile name="corner_orange_yellow" symmetry="L" weight="1.0"/>-->
+<!--        <tile name="corner_red_orange" symmetry="L" weight="1.0"/>-->
+<!--        <tile name="corner_white_red" symmetry="L" weight="1.0"/>-->
+        <tile name="ramp_blue" symmetry="T" weight="1.0"/>
+<!--        <tile name="ramp_yellow" symmetry="T" weight="1.0"/>-->
+<!--        <tile name="ramp_orange" symmetry="T" weight="1.0"/>-->
+<!--        <tile name="ramp_red" symmetry="T" weight="1.0"/>-->
+<!--        <tile name="ramp_white" symmetry="T" weight="1.0"/>-->
+    </tiles>
+    <neighbors>
+        <!-- rules of cubes -->
+        <neighbor left="cube_gray" right="cube_gray"/>
+        <neighbor left="cube_gray" right="cube_blue"/>
+        <neighbor left="cube_blue" right="cube_blue"/>
+<!--        <neighbor left="cube_blue" right="cube_yellow"/>-->
+<!--        <neighbor left="cube_yellow" right="cube_yellow"/>-->
+<!--        <neighbor left="cube_yellow" right="cube_orange"/>-->
+<!--        <neighbor left="cube_orange" right="cube_orange"/>-->
+<!--        <neighbor left="cube_orange" right="cube_red"/>-->
+<!--        <neighbor left="cube_red" right="cube_red"/>-->
+<!--        <neighbor left="cube_red" right="cube_white"/>-->
+<!--        <neighbor left="cube_white" right="cube_white"/>-->
+        <!-- rules of corners -->
+        <neighbor left="corner_blue_gray" right="cube_gray"/>
+        <neighbor left="cube_blue" right="corner_blue_gray"/>
+
+<!--        <neighbor left="corner_yellow_blue" right="cube_blue"/>-->
+<!--        <neighbor left="cube_yellow" right="corner_yellow_blue"/>-->
+
+<!--        <neighbor left="corner_orange_yellow" right="cube_yellow"/>-->
+<!--        <neighbor left="cube_orange" right="corner_orange_yellow"/>-->
+
+<!--        <neighbor left="corner_red_orange" right="cube_orange"/>-->
+<!--        <neighbor left="cube_red" right="corner_red_orange"/>-->
+
+<!--        <neighbor left="corner_white_red" right="cube_red"/>-->
+<!--        <neighbor left="cube_white" right="corner_white_red"/>-->
+
+        <!-- rules of ramps -->
+        <neighbor left="cube_gray" right="ramp_blue"/>
+        <neighbor left="ramp_blue" right="cube_gray"/>
+        <neighbor left="ramp_blue 1" right="cube_gray"/>
+        <neighbor left="cube_blue" right="ramp_blue 1"/>
+
+<!--        <neighbor left="ramp_yellow 1" right="cube_blue"/>-->
+<!--        <neighbor left="cube_yellow" right="ramp_yellow 1"/>-->
+
+<!--        <neighbor left="ramp_orange 1" right="cube_yellow"/>-->
+<!--        <neighbor left="cube_orange" right="ramp_orange 1"/>-->
+
+<!--        <neighbor left="ramp_red 1" right="cube_orange"/>-->
+<!--        <neighbor left="cube_red" right="ramp_red 1"/>-->
+
+<!--        <neighbor left="ramp_white 1" right="cube_red"/>-->
+<!--        <neighbor left="cube_white" right="ramp_white 1"/>-->
+    </neighbors>
+    <subsets>
+        <subset name="xland">
+        <tile name="cube_gray" />
+        <tile name="cube_blue" />
+<!--        <tile name="cube_yellow" />-->
+<!--        <tile name="cube_orange" />-->
+<!--        <tile name="cube_red" />-->
+<!--        <tile name="cube_white" />-->
+        <tile name="corner_blue_gray" />
+<!--        <tile name="corner_yellow_blue" />-->
+<!--        <tile name="corner_orange_yellow" />-->
+<!--        <tile name="corner_red_orange" />-->
+<!--        <tile name="corner_white_red" />-->
+        <tile name="ramp_blue" />
+<!--        <tile name="ramp_yellow" />-->
+<!--        <tile name="ramp_orange" />-->
+<!--        <tile name="ramp_red" />-->
+<!--        <tile name="ramp_white" />-->
+        </subset>
+    </subsets>
+</set>

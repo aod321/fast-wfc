@@ -5,10 +5,10 @@
 #include <string>
 #include "time.h"
 
-#include "fastwfc/overlapping_wfc.hpp"
-#include "fastwfc/tiling_wfc.hpp"
-#include "fastwfc/utils/array3D.hpp"
-#include "fastwfc/wfc.hpp"
+#include "overlapping_wfc.hpp"
+#include "tiling_wfc.hpp"
+#include "utils/array3D.hpp"
+#include "wfc.hpp"
 #include "external/rapidxml.hpp"
 #include "image.hpp"
 #include "rapidxml_utils.hpp"
