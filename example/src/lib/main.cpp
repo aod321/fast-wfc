@@ -261,33 +261,47 @@ void read_simpletiled_instance(xml_node<> *node,
                                        tiles_id[neighbor2], orientation2));
   }
 
-  for (unsigned test = 0; test < 10; test++) {
     int seed = get_random_seed();
     TilingWFC<Color> wfc(tiles, neighbors_ids, height, width, {periodic_output},
                          seed);
+    for (unsigned test = 0; test < 10; test++) {
+        // For the summer tileset, place water on the borders, and land in the middle
+        if (name == "Summer") {
+          for(int i = 0; i < height; i++) {
+            wfc.set_tile(tiles_id["water_a"], 0, i, 0);
+            wfc.set_tile(tiles_id["water_a"], 0, i, width - 1);
+          }
+          for(int j = 0; j < width; j++) {
+            wfc.set_tile(tiles_id["water_a"], 0, 0, j);
+            wfc.set_tile(tiles_id["water_a"], 0, height -1, j);
+          }
+          wfc.set_tile(tiles_id["grass"], 0, width / 2, height / 2);
+        }
 
-    // For the summer tileset, place water on the borders, and land in the middle
-    if (name == "Summer") {
-      for(int i = 0; i < height; i++) {
-        wfc.set_tile(tiles_id["water_a"], 0, i, 0);
-        wfc.set_tile(tiles_id["water_a"], 0, i, width - 1);
-      }
-      for(int j = 0; j < width; j++) {
-        wfc.set_tile(tiles_id["water_a"], 0, 0, j);
-        wfc.set_tile(tiles_id["water_a"], 0, height -1, j);
-      }
-      wfc.set_tile(tiles_id["grass"], 0, width / 2, height / 2);
+        std::optional<Array2D<Color>> success = wfc.run();
+        if (success.has_value()) {
+          write_image_png("results/" + name + "_" + subset + ".png", *success);
+          cout << name << " finished!" << endl;
+          break;
+        } else {
+          cout << "failed!" << endl;
+        }
     }
-
-    std::optional<Array2D<Color>> success = wfc.run();
-    if (success.has_value()) {
-      write_image_png("results/" + name + "_" + subset + ".png", *success);
-      cout << name << " finished!" << endl;
-      break;
-    } else {
-      cout << "failed!" << endl;
+//
+    seed = get_random_seed();
+    TilingWFC<Color> new_wfc(tiles, neighbors_ids, height, width, {periodic_output},
+                             seed);
+    for (unsigned test = 0; test < 10; test++) {
+        const Wave base_wave = wfc.get_wave();
+        std::optional<Array2D<Color>> success = new_wfc.mutate(base_wave, 50);
+        if (success.has_value()) {
+            write_image_png("results/" + name + "_" + subset + "_mutate.png", *success);
+            cout << name << " mutate finished!" << endl;
+            break;
+        } else {
+            cout << "failed!" << endl;
+        }
     }
-  }
 }
 
 /**
