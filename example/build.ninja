@@ -38,72 +38,18 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /Users/yinzi/fast-wfc/example/
 # =============================================================================
-# Object build statements for STATIC_LIBRARY target FASTWFC_LIB
-
-
-#############################################
-# Order-only phony target for FASTWFC_LIB
-
-build cmake_object_order_depends_target_FASTWFC_LIB: phony || CMakeFiles/FASTWFC_LIB.dir
-
-build CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wfc.cpp.o: CXX_COMPILER__FASTWFC_LIB_Debug /Users/yinzi/fast-wfc/src/lib/wfc.cpp || cmake_object_order_depends_target_FASTWFC_LIB
-  DEP_FILE = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wfc.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
-  INCLUDES = -I/Users/yinzi/fast-wfc/example/../src/include
-  OBJECT_DIR = CMakeFiles/FASTWFC_LIB.dir
-  OBJECT_FILE_DIR = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib
-  TARGET_COMPILE_PDB = CMakeFiles/FASTWFC_LIB.dir/FASTWFC_LIB.pdb
-  TARGET_PDB = libFASTWFC_LIB.pdb
-
-build CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wave.cpp.o: CXX_COMPILER__FASTWFC_LIB_Debug /Users/yinzi/fast-wfc/src/lib/wave.cpp || cmake_object_order_depends_target_FASTWFC_LIB
-  DEP_FILE = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wave.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
-  INCLUDES = -I/Users/yinzi/fast-wfc/example/../src/include
-  OBJECT_DIR = CMakeFiles/FASTWFC_LIB.dir
-  OBJECT_FILE_DIR = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib
-  TARGET_COMPILE_PDB = CMakeFiles/FASTWFC_LIB.dir/FASTWFC_LIB.pdb
-  TARGET_PDB = libFASTWFC_LIB.pdb
-
-build CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/propagator.cpp.o: CXX_COMPILER__FASTWFC_LIB_Debug /Users/yinzi/fast-wfc/src/lib/propagator.cpp || cmake_object_order_depends_target_FASTWFC_LIB
-  DEP_FILE = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/propagator.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
-  INCLUDES = -I/Users/yinzi/fast-wfc/example/../src/include
-  OBJECT_DIR = CMakeFiles/FASTWFC_LIB.dir
-  OBJECT_FILE_DIR = CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib
-  TARGET_COMPILE_PDB = CMakeFiles/FASTWFC_LIB.dir/FASTWFC_LIB.pdb
-  TARGET_PDB = libFASTWFC_LIB.pdb
-
-
-# =============================================================================
-# Link build statements for STATIC_LIBRARY target FASTWFC_LIB
-
-
-#############################################
-# Link the static library libFASTWFC_LIB.a
-
-build libFASTWFC_LIB.a: CXX_STATIC_LIBRARY_LINKER__FASTWFC_LIB_Debug CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wfc.cpp.o CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/wave.cpp.o CMakeFiles/FASTWFC_LIB.dir/Users/yinzi/fast-wfc/src/lib/propagator.cpp.o
-  ARCH_FLAGS = -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
-  LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = CMakeFiles/FASTWFC_LIB.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_COMPILE_PDB = CMakeFiles/FASTWFC_LIB.dir/FASTWFC_LIB.pdb
-  TARGET_FILE = libFASTWFC_LIB.a
-  TARGET_PDB = libFASTWFC_LIB.pdb
-
-# =============================================================================
 # Object build statements for EXECUTABLE target wfc_demo
 
 
 #############################################
 # Order-only phony target for wfc_demo
 
-build cmake_object_order_depends_target_wfc_demo: phony || cmake_object_order_depends_target_FASTWFC_LIB
+build cmake_object_order_depends_target_wfc_demo: phony || CMakeFiles/wfc_demo.dir
 
 build CMakeFiles/wfc_demo.dir/src/lib/main.cpp.o: CXX_COMPILER__wfc_demo_Debug /Users/yinzi/fast-wfc/example/src/lib/main.cpp || cmake_object_order_depends_target_wfc_demo
   DEP_FILE = CMakeFiles/wfc_demo.dir/src/lib/main.cpp.o.d
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++17
-  INCLUDES = -I/Users/yinzi/fast-wfc/example/src/include -I/Users/yinzi/fast-wfc/example/../src/include
+  INCLUDES = -I/Users/yinzi/fast-wfc/example/src/include
   OBJECT_DIR = CMakeFiles/wfc_demo.dir
   OBJECT_FILE_DIR = CMakeFiles/wfc_demo.dir/src/lib
   TARGET_COMPILE_PDB = CMakeFiles/wfc_demo.dir/
@@ -117,10 +63,10 @@ build CMakeFiles/wfc_demo.dir/src/lib/main.cpp.o: CXX_COMPILER__wfc_demo_Debug /
 #############################################
 # Link the executable wfc_demo
 
-build wfc_demo: CXX_EXECUTABLE_LINKER__wfc_demo_Debug CMakeFiles/wfc_demo.dir/src/lib/main.cpp.o | libFASTWFC_LIB.a || libFASTWFC_LIB.a
+build wfc_demo: CXX_EXECUTABLE_LINKER__wfc_demo_Debug CMakeFiles/wfc_demo.dir/src/lib/main.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
   LINK_FLAGS = -L/opt/homebrew/opt/openblas/lib
-  LINK_LIBRARIES = libFASTWFC_LIB.a
+  LINK_LIBRARIES = -lFASTWFC_LIB
   OBJECT_DIR = CMakeFiles/wfc_demo.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -154,8 +100,6 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build FASTWFC_LIB: phony libFASTWFC_LIB.a
-
 # =============================================================================
 # Folder targets.
 
@@ -164,7 +108,7 @@ build FASTWFC_LIB: phony libFASTWFC_LIB.a
 #############################################
 # Folder: /Users/yinzi/fast-wfc/example
 
-build all: phony libFASTWFC_LIB.a wfc_demo
+build all: phony wfc_demo
 
 # =============================================================================
 # Built-in targets

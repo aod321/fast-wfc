@@ -51,8 +51,22 @@ void Propagator::propagate(Wave &wave) noexcept {
 
       // The index of the second cell, and the patterns compatible
       unsigned i2 = x2 + y2 * wave.width;
-      const std::vector<unsigned> &patterns =
+      std::vector<unsigned> &patterns =
         propagator_state[pattern][direction];
+
+      std::uniform_real_distribution<> dis(0.0, 1.0);
+      const std::vector<double> weights = neghbor_weights[pattern][direction];
+
+//      // Retain neighbor blocks based on set probabilities
+//      std::vector<unsigned> new_patterns;
+//      for (unsigned i = 0; i < patterns.size(); i++) {
+//          unsigned pattern2 = patterns[i];
+//          double weight = weights[i];
+//          double sample_prob = dis(gen);
+//          if (sample_prob < weight) {
+//              new_patterns.push_back(pattern2);
+//          }
+//      }
 
       // For every pattern that could be placed in that cell without being in
       // contradiction with pattern1

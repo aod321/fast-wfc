@@ -5,10 +5,9 @@
 #include <string>
 #include "time.h"
 
-#include "overlapping_wfc.hpp"
-#include "tiling_wfc.hpp"
-#include "utils/array3D.hpp"
-#include "wfc.hpp"
+#include <fastwfc/tiling_wfc.hpp>
+#include <fastwfc/utils/array3D.hpp>
+#include <fastwfc/wfc.hpp>
 #include "external/rapidxml.hpp"
 #include "image.hpp"
 #include "rapidxml_utils.hpp"
@@ -32,47 +31,6 @@ int get_random_seed() {
   #endif
 }
 
-/**
- * Read the overlapping wfc problem from the xml node.
- */
-void read_overlapping_instance(xml_node<> *node) {
-  string name = rapidxml::get_attribute(node, "name");
-  unsigned N = stoi(rapidxml::get_attribute(node, "N"));
-  bool periodic_output =
-      (rapidxml::get_attribute(node, "periodic", "False") == "True");
-  bool periodic_input =
-      (rapidxml::get_attribute(node, "periodicInput", "True") == "True");
-  bool ground = (stoi(rapidxml::get_attribute(node, "ground", "0")) != 0);
-  unsigned symmetry = stoi(rapidxml::get_attribute(node, "symmetry", "8"));
-  unsigned screenshots =
-      stoi(rapidxml::get_attribute(node, "screenshots", "2"));
-  unsigned width = stoi(rapidxml::get_attribute(node, "width", "48"));
-  unsigned height = stoi(rapidxml::get_attribute(node, "height", "48"));
-
-  cout << name << " started!" << endl;
-  // Stop hardcoding samples
-  const std::string image_path = "samples/" + name + ".png";
-  std::optional<Array2D<Color>> m = read_image(image_path);
-  if (!m.has_value()) {
-    throw "Error while loading " + image_path;
-  }
-  OverlappingWFCOptions options = {
-      periodic_input, periodic_output, height, width, symmetry, ground, N};
-  for (unsigned i = 0; i < screenshots; i++) {
-    for (unsigned test = 0; test < 10; test++) {
-      int seed = get_random_seed();
-      OverlappingWFC<Color> wfc(*m, options, seed);
-      std::optional<Array2D<Color>> success = wfc.run();
-      if (success.has_value()) {
-        write_image_png("results/" + name + to_string(i) + ".png", *success);
-        cout << name << " finished!" << endl;
-        break;
-      } else {
-        cout << "failed!" << endl;
-      }
-    }
-  }
-}
 
 /**
  * Transform a symmetry name into its Symmetry enum
@@ -182,7 +140,8 @@ unordered_map<string, Tile<Color>> read_tiles(xml_node<> *root_node,
  * A value {t1,o1,t2,o2} means that the tile t1 with orientation o1 can be
  * placed at the right of the tile t2 with orientation o2.
  */
-vector<tuple<string, unsigned, string, unsigned>>
+//vector<tuple<string, unsigned, string, unsigned>>
+auto
 read_neighbors(xml_node<> *root_node) {
   vector<tuple<string, unsigned, string, unsigned>> neighbors;
   xml_node<> *neighbor_node = root_node->first_node("neighbors");
@@ -207,6 +166,41 @@ read_neighbors(xml_node<> *root_node) {
         {left_tile, left_orientation, right_tile, right_orientation});
   }
   return neighbors;
+}
+
+/**
+ * Read the neighbors constraints for a tiling problem.
+ * A value {t1,o1,t2,o2} means that the tile t1 with orientation o1 can be
+ * placed at the right of the tile t2 with orientation o2.
+ */
+//vector<tuple<string, unsigned, string, unsigned, double>>
+auto
+read_neighbors_weights(xml_node<> *root_node) {
+    vector<tuple<string, unsigned, string, unsigned, double>> neighbors;
+    xml_node<> *neighbor_node = root_node->first_node("neighbors");
+    for (xml_node<> *node = neighbor_node->first_node("neighbor"); node;
+         node = node->next_sibling("neighbor")) {
+        string left = rapidxml::get_attribute(node, "left");
+        string::size_type left_delimiter = left.find(" ");
+        string left_tile = left.substr(0, left_delimiter);
+        unsigned left_orientation = 0;
+        if (left_delimiter != string::npos) {
+            left_orientation = stoi(left.substr(left_delimiter, string::npos));
+        }
+
+        string right = rapidxml::get_attribute(node, "right");
+        string::size_type right_delimiter = right.find(" ");
+        string right_tile = right.substr(0, right_delimiter);
+        unsigned right_orientation = 0;
+        if (right_delimiter != string::npos) {
+            right_orientation = stoi(right.substr(right_delimiter, string::npos));
+        }
+        string weight_str = rapidxml::get_attribute(node, "weight", "1.0");
+        double weight = stod(weight_str);
+        neighbors.push_back(
+                {left_tile, left_orientation, right_tile, right_orientation, weight});
+    }
+    return neighbors;
 }
 
 /**
@@ -243,14 +237,15 @@ void read_simpletiled_instance(xml_node<> *node,
     id++;
   }
 
-  vector<tuple<string, unsigned, string, unsigned>> neighbors =
-      read_neighbors(data_root_node);
-  vector<tuple<unsigned, unsigned, unsigned, unsigned>> neighbors_ids;
+  vector<tuple<string, unsigned, string, unsigned, double>> neighbors =
+      read_neighbors_weights(data_root_node);
+  vector<tuple<unsigned, unsigned, unsigned, unsigned, double>> neighbors_ids;
   for (auto neighbor : neighbors) {
     const string &neighbor1 = get<0>(neighbor);
     const int &orientation1 = get<1>(neighbor);
     const string &neighbor2 = get<2>(neighbor);
     const int &orientation2 = get<3>(neighbor);
+    const double &weight = get<4>(neighbor);
     if (tiles_id.find(neighbor1) == tiles_id.end()) {
       continue;
     }
@@ -258,50 +253,29 @@ void read_simpletiled_instance(xml_node<> *node,
       continue;
     }
     neighbors_ids.push_back(make_tuple(tiles_id[neighbor1], orientation1,
-                                       tiles_id[neighbor2], orientation2));
+                                       tiles_id[neighbor2], orientation2, weight));
   }
 
     int seed = get_random_seed();
     TilingWFC<Color> wfc(tiles, neighbors_ids, height, width, {periodic_output},
                          seed);
-    for (unsigned test = 0; test < 10; test++) {
-        // For the summer tileset, place water on the borders, and land in the middle
-        if (name == "Summer") {
-          for(int i = 0; i < height; i++) {
-            wfc.set_tile(tiles_id["water_a"], 0, i, 0);
-            wfc.set_tile(tiles_id["water_a"], 0, i, width - 1);
-          }
-          for(int j = 0; j < width; j++) {
-            wfc.set_tile(tiles_id["water_a"], 0, 0, j);
-            wfc.set_tile(tiles_id["water_a"], 0, height -1, j);
-          }
-          wfc.set_tile(tiles_id["grass"], 0, width / 2, height / 2);
-        }
-
-        std::optional<Array2D<Color>> success = wfc.run();
-        if (success.has_value()) {
-          write_image_png("results/" + name + "_" + subset + ".png", *success);
-          cout << name << " finished!" << endl;
-          break;
-        } else {
-          cout << "failed!" << endl;
-        }
-    }
-//
-    seed = get_random_seed();
-    TilingWFC<Color> new_wfc(tiles, neighbors_ids, height, width, {periodic_output},
-                             seed);
-    for (unsigned test = 0; test < 10; test++) {
-        const Wave base_wave = wfc.get_wave();
-        std::optional<Array2D<Color>> success = new_wfc.mutate(base_wave, 50);
-        if (success.has_value()) {
-            write_image_png("results/" + name + "_" + subset + "_mutate.png", *success);
-            cout << name << " mutate finished!" << endl;
-            break;
-        } else {
-            cout << "failed!" << endl;
-        }
-    }
+     const Wave base_wave = wfc.get_wave();
+ //    const Wave base_wave = new_wfc.get_wave();
+     for (unsigned q=0;q<30;q++) {
+         seed = get_random_seed();
+         TilingWFC<Color> new_wfc(tiles, neighbors_ids, height, width, {periodic_output},
+                                  seed);
+         for (unsigned test = 0; test < 10; test++) {
+             std::optional<Array2D<Color>> success = new_wfc.mutate(base_wave, 80);
+             if (success.has_value()) {
+                 write_image_png("results/" + name + "_" + subset + "_mutate" + std::to_string(q) + ".png", *success);
+                 cout << name << " mutate finished!" << endl;
+                 break;
+             } else {
+                 cout << "failed!" << endl;
+             }
+         }
+     }
 }
 
 /**
@@ -317,10 +291,6 @@ void read_config_file(const string &config_path) noexcept {
 
   xml_node<> *root_node = document.first_node("samples");
   string dir_path = get_dir(config_path) + "/" + "samples";
-  for (xml_node<> *node = root_node->first_node("overlapping"); node;
-       node = node->next_sibling("overlapping")) {
-    read_overlapping_instance(node);
-  }
   for (xml_node<> *node = root_node->first_node("simpletiled"); node;
        node = node->next_sibling("simpletiled")) {
     read_simpletiled_instance(node, dir_path);

@@ -1,5 +1,39 @@
 #include "wfc.hpp"
 #include <limits>
+#include <utility>
+
+
+namespace {
+    /**
+     * Normalize a vector so the sum of its elements is equal to 1.0f
+     */
+    std::vector<double>& normalize(std::vector<double>& v) {
+        double sum_weights = 0.0;
+        for(double weight: v) {
+            sum_weights += weight;
+        }
+
+        double inv_sum_weights = 1.0/sum_weights;
+        for(double& weight: v) {
+            weight *= inv_sum_weights;
+        }
+
+        return v;
+    }
+
+    // C++ template,  if an element of a vector exists, vector
+    template<typename T>
+    bool exists(const std::vector<T>& v, const T& e) {
+        return std::find(v.begin(), v.end(), e) != v.end();
+    }
+
+    // C++ template,  if an element of a vector exists, set
+    template<typename T>
+    bool exists(const std::set<T>& v, const T& e) {
+        return v.find(e) != v.end();
+    }
+
+}
 
 
 Array2D<unsigned> WFC::wave_to_output() const noexcept {
@@ -12,6 +46,27 @@ Array2D<unsigned> WFC::wave_to_output() const noexcept {
     }
   }
   return output_patterns;
+}
+
+void WFC::remove_border_ramp(){
+    // skip border ramp
+    auto cell_weights = wave.get_cell_partterns_weights();
+    std::set<unsigned > border_list;
+    for(int x = 0; x < wave.width; x++){
+        for(int y = 0; y < wave.height; y++){
+            if(x == 0 || y ==0|| x == wave.width-1 || y == wave.height-1){
+                border_list.insert(y*wave.width + x);
+            }
+        }
+    }
+    for (unsigned i = 0; i < wave.size; i++) {
+        for (unsigned k = 0; k < nb_patterns; k++) {
+            if(exists(border_list, i) && exists(ramp_ids, k)){
+                cell_weights.get(i,k) = 0.0;
+            }
+        }
+    }
+    wave.set_cell_partterns_weights(cell_weights);
 }
 
 /*
@@ -27,17 +82,32 @@ void WFC::mutate(Wave base_wave, double new_weight=10.0) noexcept{
         }
     }
     wave.set_cell_partterns_weights(cell_weights);
+//    remove_border_ramp();
 }
+
 
 WFC::WFC(bool periodic_output, int seed,
          std::vector<double> patterns_frequencies,
          Propagator::PropagatorState propagator, unsigned wave_height,
          unsigned wave_width)
+noexcept
+        : gen(seed),
+          wave(wave_height, wave_width, patterns_frequencies),
+          nb_patterns(propagator.size()),
+          propagator(wave.height, wave.width, periodic_output, propagator, gen) {}
+
+WFC::WFC(bool periodic_output, int seed, std::vector<double> patterns_frequencies,
+         Propagator::PropagatorState propagator,
+         unsigned wave_height,
+         unsigned wave_width, Propagator::NeghborWeights neghbor_weights, const std::set<unsigned>& ramp_ids)
   noexcept
   : gen(seed),
     wave(wave_height, wave_width, patterns_frequencies),
     nb_patterns(propagator.size()),
-    propagator(wave.height, wave.width, periodic_output, propagator) {}
+    ramp_ids(ramp_ids),
+    propagator(wave.height, wave.width, periodic_output, std::move(neghbor_weights), propagator,gen){
+//    remove_border_ramp();
+}
 
 std::optional<Array2D<unsigned>> WFC::run() noexcept {
   while (true) {
@@ -73,11 +143,11 @@ WFC::ObserveStatus WFC::observe() noexcept {
       wave_to_output();
       return success;
     }
-    auto normlized_cell_partterns_weights = wave.get_normlized_cell_partterns_weights();
     // Choose an element according to the pattern distribution
     double s = 0;
+    auto normlized_cell_partterns_weights = wave.get_normlized_cell_partterns_weights();
     for (unsigned k = 0; k < nb_patterns; k++) {
-      s += wave.get(argmin, k) ? normlized_cell_partterns_weights.get(argmin, k) : 0;
+        s += wave.get(argmin, k) ? normlized_cell_partterns_weights.get(argmin, k) : 0;
     }
 
     std::uniform_real_distribution<> dis(0, s);

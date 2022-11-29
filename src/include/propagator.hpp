@@ -6,6 +6,8 @@
 #include <tuple>
 #include <vector>
 #include <array>
+#include <random>
+
 
 class Wave;
 
@@ -15,18 +17,21 @@ class Wave;
 class Propagator {
 public:
   using PropagatorState = std::vector<std::array<std::vector<unsigned>, 4>>;
+  using NeghborWeights = std::vector<std::array<std::vector<double>, 4>>;
 
 private:
   /**
    * The size of the patterns.
    */
   const std::size_t patterns_size;
+  std::minstd_rand gen;
 
   /**
    * propagator[pattern1][direction] contains all the patterns that can
    * be placed in next to pattern1 in the direction direction.
    */
   PropagatorState propagator_state;
+  NeghborWeights neghbor_weights;
 
   /**
    * The wave width and height.
@@ -64,14 +69,29 @@ public:
   /**
    * Constructor building the propagator and initializing compatible.
    */
-  Propagator(unsigned wave_height, unsigned wave_width, bool periodic_output,
-             PropagatorState propagator_state) noexcept
+   Propagator(unsigned wave_height, unsigned wave_width, bool periodic_output,
+             PropagatorState propagator_state, std::minstd_rand &gen) noexcept
       : patterns_size(propagator_state.size()),
         propagator_state(propagator_state), wave_width(wave_width),
         wave_height(wave_height), periodic_output(periodic_output),
         compatible(wave_height, wave_width, patterns_size) {
     init_compatible();
   }
+
+    /**
+   * Constructor building the propagator and initializing compatible.
+   */
+   Propagator(unsigned wave_height, unsigned wave_width, bool periodic_output,
+               NeghborWeights neghbor_weights,
+               PropagatorState propagator_state, std::minstd_rand &gen) noexcept
+            : patterns_size(propagator_state.size()),
+              neghbor_weights(neghbor_weights),
+              propagator_state(propagator_state), wave_width(wave_width),
+              wave_height(wave_height), periodic_output(periodic_output),
+              gen(gen),
+              compatible(wave_height, wave_width, patterns_size) {
+        init_compatible();
+    }
 
   /**
    * Add an element to the propagator.
@@ -82,6 +102,22 @@ public:
     std::array<int, 4> temp = {};
     compatible.get(y, x, pattern) = temp;
     propagating.emplace_back(y, x, pattern);
+  }
+
+  PropagatorState get_propagator_state() {
+      return propagator_state;
+  }
+
+  NeghborWeights get_neghbor_weights() {
+      return neghbor_weights;
+  }
+
+  void set_propagator_state(PropagatorState base_propagator_state) {
+      propagator_state = base_propagator_state;
+  }
+
+  void set_neghbor_weights(NeghborWeights base_neghbor_weights) {
+      neghbor_weights = base_neghbor_weights;
   }
 
   /**

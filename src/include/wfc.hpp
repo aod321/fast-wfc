@@ -3,6 +3,8 @@
 
 #include <optional>
 #include <random>
+#include <set>
+
 
 #include "utils/array2D.hpp"
 #include "propagator.hpp"
@@ -36,7 +38,10 @@ private:
    */
   Propagator propagator;
 
-  /**
+  std::set<unsigned > ramp_ids;
+
+
+    /**
    * Transform the wave to a valid output (a 2d array of patterns that aren't in
    * contradiction). This function should be used only when all cell of the wave
    * are defined.
@@ -52,17 +57,37 @@ public:
       unsigned wave_width)
     noexcept;
 
+    /**
+   * Basic constructor initializing the algorithm.
+   */
+    WFC(bool periodic_output, int seed, std::vector<double> patterns_frequencies,
+        Propagator::PropagatorState propagator,
+        unsigned wave_height,
+        unsigned wave_width, Propagator::NeghborWeights neghbor_weights,
+        const std::set<unsigned>& ramp_ids)
+    noexcept;
 
   Wave get_wave() const noexcept {
     return wave;
   }
 
+  Propagator get_propagator() const noexcept {
+    return propagator;
+  }
+
+
+  void remove_border_ramp();
   /**
    * Run the algorithm, and return a result if it succeeded.
    */
   std::optional<Array2D<unsigned>> run() noexcept;
 
   void mutate(Wave base_wave, double new_weight) noexcept;
+
+  void set_propagator(Propagator base_propagator) noexcept {
+      propagator.set_propagator_state(base_propagator.get_propagator_state());
+      propagator.set_neghbor_weights(base_propagator.get_neghbor_weights());
+  }
 
   /**
    * Return value of observe.

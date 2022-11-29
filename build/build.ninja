@@ -48,21 +48,21 @@ build cmake_object_order_depends_target_fastwfc_static: phony || CMakeFiles/fast
 
 build CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/wave.cpp || cmake_object_order_depends_target_fastwfc_static
   DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++17
+  FLAGS = -g -arch arm64 -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc_static.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
 
 build CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/propagator.cpp || cmake_object_order_depends_target_fastwfc_static
   DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++17
+  FLAGS = -g -arch arm64 -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc_static.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
 
 build CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_static_Debug /Users/yinzi/fast-wfc/src/lib/wfc.cpp || cmake_object_order_depends_target_fastwfc_static
   DEP_FILE = CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++17
+  FLAGS = -g -arch arm64 -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc_static.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc_static.dir/src/lib
@@ -76,7 +76,7 @@ build CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_sta
 # Link the static library lib/libfastwfc_static.a
 
 build lib/libfastwfc_static.a: CXX_STATIC_LIBRARY_LINKER__fastwfc_static_Debug CMakeFiles/fastwfc_static.dir/src/lib/wave.cpp.o CMakeFiles/fastwfc_static.dir/src/lib/propagator.cpp.o CMakeFiles/fastwfc_static.dir/src/lib/wfc.cpp.o
-  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+  ARCH_FLAGS = -arch arm64
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles/fastwfc_static.dir
   POST_BUILD = :
@@ -96,7 +96,7 @@ build cmake_object_order_depends_target_fastwfc: phony || CMakeFiles/fastwfc.dir
 build CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/wave.cpp || cmake_object_order_depends_target_fastwfc
   DEFINES = -Dfastwfc_EXPORTS
   DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  FLAGS = -g -arch arm64 -fPIC -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
@@ -104,7 +104,7 @@ build CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o: CXX_COMPILER__fastwfc_Debug /Us
 build CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/propagator.cpp || cmake_object_order_depends_target_fastwfc
   DEFINES = -Dfastwfc_EXPORTS
   DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  FLAGS = -g -arch arm64 -fPIC -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
@@ -112,7 +112,7 @@ build CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o: CXX_COMPILER__fastwfc_Deb
 build CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_Debug /Users/yinzi/fast-wfc/src/lib/wfc.cpp || cmake_object_order_depends_target_fastwfc
   DEFINES = -Dfastwfc_EXPORTS
   DEP_FILE = CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC -std=gnu++17
+  FLAGS = -g -arch arm64 -fPIC -std=gnu++17
   INCLUDES = -I/Users/yinzi/fast-wfc/src/include
   OBJECT_DIR = CMakeFiles/fastwfc.dir
   OBJECT_FILE_DIR = CMakeFiles/fastwfc.dir/src/lib
@@ -126,7 +126,7 @@ build CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o: CXX_COMPILER__fastwfc_Debug /Use
 # Link the shared library lib/libfastwfc.1.0.0.dylib
 
 build lib/libfastwfc.1.0.0.dylib: CXX_SHARED_LIBRARY_LINKER__fastwfc_Debug CMakeFiles/fastwfc.dir/src/lib/wave.cpp.o CMakeFiles/fastwfc.dir/src/lib/propagator.cpp.o CMakeFiles/fastwfc.dir/src/lib/wfc.cpp.o
-  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+  ARCH_FLAGS = -arch arm64
   INSTALLNAME_DIR = @rpath/
   LANGUAGE_COMPILE_FLAGS = -g
   LINK_FLAGS = -L/opt/homebrew/opt/openblas/lib   -compatibility_version 1.0.0 -current_version 1.0.0
