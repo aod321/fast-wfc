@@ -4,6 +4,7 @@
 #include "utils/array2D.hpp"
 #include <random>
 #include <vector>
+#include <iostream>
 
 /**
  * Struct containing the values needed to compute the entropy of all the cells.
@@ -24,21 +25,18 @@ struct EntropyMemoisation {
  * Also contains information about cell entropy.
  */
 class Wave {
-private:
+protected:
 
     Array2D<double> cell_partterns_weights;       // The parten weights of the cell.
     Array2D<double> normalized_cell_partterns_weights;       // The parten weights of the cell.
-  /**
-   * The patterns frequencies p given to wfc.
-   */
-  const std::vector<double> patterns_frequencies;
 
-  /**
-   * The precomputation of p * log(p).
-   */
+    /**
+     * The precomputation of p * log(p).
+     */
   const std::vector<double> plogp_patterns_frequencies;
 
-  /**
+
+    /**
    * The precomputation of min (p * log(p)) / 2.
    * This is used to define the maximum value of the noise.
    */
@@ -55,17 +53,6 @@ private:
    */
   bool is_impossible;
 
-  /**
-   * The number of distinct patterns.
-   */
-  const size_t nb_patterns;
-
-  /**
-   * The actual wave. data.get(index, pattern) is equal to 0 if the pattern can
-   * be placed in the cell index.
-   */
-  Array2D<uint8_t> data;
-
 public:
   /**
    * The size of the wave.
@@ -74,11 +61,13 @@ public:
   const unsigned height;
   const unsigned size;
 
+
   /**
    * Initialize the wave with every cell being able to have every pattern.
    */
   Wave(unsigned height, unsigned width,
        const std::vector<double> &patterns_frequencies) noexcept;
+  
 
   Array2D<double> get_cell_partterns_weights() const noexcept {
     return cell_partterns_weights;
@@ -98,6 +87,14 @@ public:
 
   void set_cell_partterns_weights(Array2D<double> weights) noexcept;
 
+
+  EntropyMemoisation get_memorization() const noexcept{
+      return memoisation;
+  }
+
+  void set_memorization(EntropyMemoisation memo) noexcept{
+    memoisation = memo;
+  }
   /**
    * Return true if pattern can be placed in cell index.
    */
@@ -124,13 +121,24 @@ public:
     set(i * width + j, pattern, value);
   }
 
-  /**
+    /**
    * Return the index of the cell with lowest entropy different of 0.
    * If there is a contradiction in the wave, return -2.
    * If every cell is decided, return -1.
    */
   int get_min_entropy(std::minstd_rand &gen) const noexcept;
+// * The patterns frequencies p given to wfc.
+// */
+const std::vector<double> patterns_frequencies;
+/**
+ * The number of distinct patterns.
+ */
+const size_t nb_patterns;
 
+/**
+* The actual wave. data.get(index, pattern) is equal to 0 if the pattern can
+* be placed in the cell index.
+*/
+Array2D<uint8_t> data;
 };
-
 #endif // FAST_WFC_WAVE_HPP_

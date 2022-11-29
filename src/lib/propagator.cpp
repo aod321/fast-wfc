@@ -1,6 +1,20 @@
 #include "propagator.hpp"
 #include "wave.hpp"
 
+namespace {
+    // C++ template,  if an element of a vector exists, set
+    template<typename T>
+    bool exists(const std::set<T>& v, const T& e) {
+        return v.find(e) != v.end();
+    }
+
+    // C++ template,  if an element of a vector exists, vector
+    template<typename T>
+    bool exists(const std::vector<T>& v, const T& e) {
+        return std::find(v.begin(), v.end(), e) != v.end();
+    }
+}
+
 void Propagator::init_compatible() noexcept {
   std::array<int, 4> value;
   // We compute the number of pattern compatible in all directions.
@@ -54,20 +68,6 @@ void Propagator::propagate(Wave &wave) noexcept {
       std::vector<unsigned> &patterns =
         propagator_state[pattern][direction];
 
-      std::uniform_real_distribution<> dis(0.0, 1.0);
-      const std::vector<double> weights = neghbor_weights[pattern][direction];
-
-//      // Retain neighbor blocks based on set probabilities
-//      std::vector<unsigned> new_patterns;
-//      for (unsigned i = 0; i < patterns.size(); i++) {
-//          unsigned pattern2 = patterns[i];
-//          double weight = weights[i];
-//          double sample_prob = dis(gen);
-//          if (sample_prob < weight) {
-//              new_patterns.push_back(pattern2);
-//          }
-//      }
-
       // For every pattern that could be placed in that cell without being in
       // contradiction with pattern1
       for (auto it = patterns.begin(), it_end = patterns.end(); it < it_end;
@@ -88,4 +88,58 @@ void Propagator::propagate(Wave &wave) noexcept {
       }
     }
   }
+}
+
+
+void Propagator::neghbour_propagate(Wave &wave, std::set<unsigned> ramp_ids) noexcept {
+    auto &cell_weights = wave.get_cell_partterns_weights();
+    // We propagate every element while there is element to propagate.
+    while (neb_propagating.size() != 0) {
+
+        // The cell and pattern that just collapsed
+        auto [y1, x1, pattern] = neb_propagating.back();
+        neb_propagating.pop_back();
+
+        // We propagate the information in all 4 directions.
+        for (unsigned direction = 0; direction < 4; direction++) {
+
+            // We get the next cell in the direction.
+            int dx = directions_x[direction];
+            int dy = directions_y[direction];
+            int x2, y2;
+            if (periodic_output) {
+                x2 = ((int)x1 + dx + (int)wave.width) % wave.width;
+                y2 = ((int)y1 + dy + (int)wave.height) % wave.height;
+            } else {
+                x2 = x1 + dx;
+                y2 = y1 + dy;
+                if (x2 < 0 || x2 >= (int)wave.width) {
+                    continue;
+                }
+                if (y2 < 0 || y2 >= (int)wave.height) {
+                    continue;
+                }
+            }
+
+            // The index of the second cell, and the pattern neghbour weights
+            unsigned i2 = x2 + y2 * wave.width;
+            // If the cell is at border, it shouldn't be a ramp
+            if(exists(border_list, i2)){
+                for(auto ramp_id : ramp_ids){
+                    cell_weights.get(i2, ramp_id) = 0.0;
+                }
+            }
+
+            std::vector<double> &weights =
+                    neghbor_weights[pattern][direction];
+            // For every parten that related to the collapsed pattern, set its weights
+            for (auto it = weights.begin(), it_end = weights.end(); it < it_end;
+                 ++it) {
+                    if(wave.get(i2, it-weights.begin())){
+                        cell_weights.get(i2, it - weights.begin()) *= *it;
+                    }
+                }
+        }
+    }
+    wave.set_cell_partterns_weights(cell_weights);
 }

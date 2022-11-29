@@ -14,12 +14,7 @@
  * Class containing the generic WFC algorithm.
  */
 class WFC {
-private:
-  /**
-   * The random number generator.
-   */
-  std::minstd_rand gen;
-
+protected:
   /**
    * The distribution of the patterns as given in input.
    */
@@ -27,6 +22,12 @@ private:
    * The wave, indicating which patterns can be put in which cell.
    */
   Wave wave;
+
+private:
+  /**
+   * The random number generator.
+   */
+  std::minstd_rand gen;
 
   /**
    * The number of distinct patterns.
@@ -39,6 +40,7 @@ private:
   Propagator propagator;
 
   std::set<unsigned > ramp_ids;
+std::vector<double> patterns_frequencies;
 
 
     /**
@@ -69,6 +71,10 @@ public:
 
   Wave get_wave() const noexcept {
     return wave;
+  }
+
+  void set_seed(unsigned seed) noexcept {
+    gen.seed(seed);
   }
 
   Propagator get_propagator() const noexcept {

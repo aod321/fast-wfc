@@ -11,6 +11,7 @@ namespace {
     std::minstd_rand gen;
     std::uniform_real_distribution<> dis(0.0, 1.0);
 }
+namespace tilingWFC{
 /**
  * The distinct symmetries of a tile.
  * It represents how the tile behave when it is rotated or reflected
@@ -181,11 +182,29 @@ struct TilingWFCOptions {
   bool periodic_output;
 };
 
+
+/**
+* Get probability of presence of tiles.
+*/
+template <typename T>
+static std::vector<double>
+get_tiles_weights(const std::vector<Tile<T>> &tiles) {
+    std::vector<double> frequencies;
+    for (size_t i = 0; i < tiles.size(); ++i) {
+        for (size_t j = 0; j < tiles[i].data.size(); ++j) {
+            frequencies.push_back(tiles[i].weight / tiles[i].data.size());
+        }
+    }
+    return frequencies;
+}
 /**
  * Class generating a new image with the tiling WFC algorithm.
  */
 template <typename T> class TilingWFC {
 private:
+
+    std::vector<std::pair<unsigned, unsigned>> id_to_oriented_tile;
+    std::vector<std::vector<unsigned>> oriented_tile_ids;
   /**
    * The distincts tiles.
    */
@@ -194,14 +213,8 @@ private:
   /**
    * Map ids of oriented tiles to tile and orientation.
    */
-  std::vector<std::pair<unsigned, unsigned>> id_to_oriented_tile;
 
-  /**
-   * Map tile and orientation to oriented tile id.
-   */
-  std::vector<std::vector<unsigned>> oriented_tile_ids;
-
-  std::set<unsigned> ramp_ids;
+        std::set<unsigned> ramp_ids;
 
   /**
    * Otions needed to use the tiling wfc.
@@ -225,11 +238,15 @@ public:
    */
   unsigned width;
 
+
   Wave get_wave() {
       return wfc.get_wave();
   }
 
-private:
+/**
+ * Map tile and orientation to oriented tile id.
+ */
+    private:
 
   /**
    * Generate mapping from id to oriented tiles and vice versa.
@@ -343,127 +360,103 @@ private:
   }
 
 
-    /**
-     * Generate the propagator which will be used in the wfc algorithm.
-     */
+        /**
+         * Generate the propagator which will be used in the wfc algorithm.
+         */
 //    static std::vector<std::array<std::vector<unsigned>, 4>> generate_propagator(
-    auto generate_propagator(
-            const std::vector<std::tuple<unsigned, unsigned, unsigned, unsigned, double>>
-            &neighbors,
-            std::vector<Tile<T>> tiles,
-            std::vector<std::pair<unsigned, unsigned>> id_to_oriented_tile,
-            std::vector<std::vector<unsigned>> oriented_tile_ids) {
-        size_t nb_oriented_tiles = id_to_oriented_tile.size();
-        std::vector<std::array<std::vector<bool>, 4>> dense_propagator(
-                nb_oriented_tiles, {std::vector<bool>(nb_oriented_tiles, false),
-                                    std::vector<bool>(nb_oriented_tiles, false),
-                                    std::vector<bool>(nb_oriented_tiles, false),
-                                    std::vector<bool>(nb_oriented_tiles, false)});
+        auto generate_propagator(
+                const std::vector<std::tuple<unsigned, unsigned, unsigned, unsigned, double>>
+                &neighbors,
+                std::vector<Tile<T>> tiles,
+                std::vector<std::pair<unsigned, unsigned>> id_to_oriented_tile,
+                std::vector<std::vector<unsigned>> oriented_tile_ids) {
+            size_t nb_oriented_tiles = id_to_oriented_tile.size();
+            std::vector<std::array<std::vector<bool>, 4>> dense_propagator(
+                    nb_oriented_tiles, {std::vector<bool>(nb_oriented_tiles, false),
+                                        std::vector<bool>(nb_oriented_tiles, false),
+                                        std::vector<bool>(nb_oriented_tiles, false),
+                                        std::vector<bool>(nb_oriented_tiles, false)});
 
-        std::vector<std::array<std::vector<double>, 4>> dense_weight(
-                nb_oriented_tiles, {std::vector<double>(nb_oriented_tiles, 1.0),
-                                    std::vector<double>(nb_oriented_tiles, 1.0),
-                                    std::vector<double>(nb_oriented_tiles, 1.0),
-                                    std::vector<double>(nb_oriented_tiles, 1.0)});
+            std::vector<std::array<std::vector<double>, 4>> dense_weight(
+                    nb_oriented_tiles, {std::vector<double>(nb_oriented_tiles, 1.0),
+                                        std::vector<double>(nb_oriented_tiles, 1.0),
+                                        std::vector<double>(nb_oriented_tiles, 1.0),
+                                        std::vector<double>(nb_oriented_tiles, 1.0)});
 
-        for (auto neighbor : neighbors) {
-            unsigned tile1 = std::get<0>(neighbor);
-            unsigned orientation1 = std::get<1>(neighbor);
-            unsigned tile2 = std::get<2>(neighbor);
-            unsigned orientation2 = std::get<3>(neighbor);
-            double weight = std::get<4>(neighbor);
-            std::vector<std::vector<unsigned>> action_map1 =
-                    Tile<T>::generate_action_map(tiles[tile1].symmetry);
-            std::vector<std::vector<unsigned>> action_map2 =
-                    Tile<T>::generate_action_map(tiles[tile2].symmetry);
+            for (auto neighbor : neighbors) {
+                unsigned tile1 = std::get<0>(neighbor);
+                unsigned orientation1 = std::get<1>(neighbor);
+                unsigned tile2 = std::get<2>(neighbor);
+                unsigned orientation2 = std::get<3>(neighbor);
+                double weight = std::get<4>(neighbor);
+                std::vector<std::vector<unsigned>> action_map1 =
+                        Tile<T>::generate_action_map(tiles[tile1].symmetry);
+                std::vector<std::vector<unsigned>> action_map2 =
+                        Tile<T>::generate_action_map(tiles[tile2].symmetry);
 
-            auto add = [&](unsigned action, unsigned direction) {
-                unsigned temp_orientation1 = action_map1[action][orientation1];
-                unsigned temp_orientation2 = action_map2[action][orientation2];
-                unsigned oriented_tile_id1 =
-                        oriented_tile_ids[tile1][temp_orientation1];
-                unsigned oriented_tile_id2 =
-                        oriented_tile_ids[tile2][temp_orientation2];
-                auto random_value = dis(gen);
-                if (random_value < weight) {
+                auto add = [&](unsigned action, unsigned direction) {
+                    unsigned temp_orientation1 = action_map1[action][orientation1];
+                    unsigned temp_orientation2 = action_map2[action][orientation2];
                     unsigned oriented_tile_id1 =
                             oriented_tile_ids[tile1][temp_orientation1];
                     unsigned oriented_tile_id2 =
                             oriented_tile_ids[tile2][temp_orientation2];
                     dense_propagator[oriented_tile_id1][direction][oriented_tile_id2] =
                             true;
+                    dense_weight[oriented_tile_id1][direction][oriented_tile_id2] =
+                            weight;
                     direction = get_opposite_direction(direction);
                     dense_propagator[oriented_tile_id2][direction][oriented_tile_id1] =
                             true;
-                }
+                    dense_weight[oriented_tile_id2][direction][oriented_tile_id1] =
+                            weight;
+                    /*
+                     *  Deprecated
+                    auto random_value = dis(gen);
+                    if (random_value < weight) {
+                        unsigned oriented_tile_id1 =
+                                oriented_tile_ids[tile1][temp_orientation1];
+                        unsigned oriented_tile_id2 =
+                                oriented_tile_ids[tile2][temp_orientation2];
+                        dense_propagator[oriented_tile_id1][direction][oriented_tile_id2] =
+                                true;
+                        direction = get_opposite_direction(direction);
+                        dense_propagator[oriented_tile_id2][direction][oriented_tile_id1] =
+                                true;
+                    }
+                 */
 
-            };
+                };
 
-            add(0, 2);
-            add(1, 0);
-            add(2, 1);
-            add(3, 3);
-            add(4, 1);
-            add(5, 3);
-            add(6, 2);
-            add(7, 0);
-        }
+                add(0, 2);
+                add(1, 0);
+                add(2, 1);
+                add(3, 3);
+                add(4, 1);
+                add(5, 3);
+                add(6, 2);
+                add(7, 0);
+            }
 
-        std::vector<std::array<std::vector<unsigned>, 4>> propagator(
-                nb_oriented_tiles);
-        std::vector<std::array<std::vector<double>, 4>> nb_weights(
-                nb_oriented_tiles);
-        for (size_t i = 0; i < nb_oriented_tiles; ++i) {
-            for (size_t j = 0; j < nb_oriented_tiles; ++j) {
-                for (size_t d = 0; d < 4; ++d) {
-                    if (dense_propagator[i][d][j]) {
-                        propagator[i][d].push_back(j);
-                        nb_weights[i][d].push_back(dense_weight[i][d][j]);
+            std::vector<std::array<std::vector<unsigned>, 4>> propagator(
+                    nb_oriented_tiles);
+//            std::vector<std::array<std::vector<double>, 4>> nb_weights(
+//                    nb_oriented_tiles);
+            for (size_t i = 0; i < nb_oriented_tiles; ++i) {
+                for (size_t j = 0; j < nb_oriented_tiles; ++j) {
+                    for (size_t d = 0; d < 4; ++d) {
+                        if (dense_propagator[i][d][j]) {
+                            propagator[i][d].push_back(j);
+//                            nb_weights[i][d].push_back(dense_weight[i][d][j]);
+                        }
                     }
                 }
             }
+
+            return std::pair<Propagator::PropagatorState ,Propagator::NeghborWeights>(propagator, dense_weight);
         }
 
-        return std::pair<Propagator::PropagatorState ,Propagator::NeghborWeights>(propagator, nb_weights);
-    }
-
-
-    /**
-   * Get probability of presence of tiles.
-   */
-  static std::vector<double>
-  get_tiles_weights(const std::vector<Tile<T>> &tiles) {
-    std::vector<double> frequencies;
-    for (size_t i = 0; i < tiles.size(); ++i) {
-      for (size_t j = 0; j < tiles[i].data.size(); ++j) {
-        frequencies.push_back(tiles[i].weight / tiles[i].data.size());
-      }
-    }
-    return frequencies;
-  }
-
-  /**
-   * Translate the generic WFC result into the image result
-   */
-  Array2D<T> id_to_tiling(Array2D<unsigned> ids) {
-    unsigned size = tiles[0].data[0].height;
-    Array2D<T> tiling(size * ids.height, size * ids.width);
-    for (unsigned i = 0; i < ids.height; i++) {
-      for (unsigned j = 0; j < ids.width; j++) {
-        std::pair<unsigned, unsigned> oriented_tile =
-            id_to_oriented_tile[ids.get(i, j)];
-        for (unsigned y = 0; y < size; y++) {
-          for (unsigned x = 0; x < size; x++) {
-            tiling.get(i * size + y, j * size + x) =
-                tiles[oriented_tile.first].data[oriented_tile.second].get(y, x);
-          }
-        }
-      }
-    }
-    return tiling;
-  }
-
-  void set_tile(unsigned tile_id, unsigned i, unsigned j) noexcept {
+        void set_tile(unsigned tile_id, unsigned i, unsigned j) noexcept {
     for (unsigned p = 0; p < id_to_oriented_tile.size(); p++) {
       if (tile_id != p) {
         wfc.remove_wave_pattern(i, j, p);
@@ -515,6 +508,61 @@ public:
                   ),
               height(height), width(width) {}
 
+/**
+* Translate the generic WFC result into the image result
+*/
+Array2D<T> id_to_tiling(Array2D<unsigned> ids) {
+    unsigned size = tiles[0].data[0].height;
+    Array2D<T> tiling(size * ids.height, size * ids.width);
+    for (unsigned i = 0; i < ids.height; i++) {
+        for (unsigned j = 0; j < ids.width; j++) {
+            std::pair<unsigned, unsigned> oriented_tile =
+                    id_to_oriented_tile[ids.get(i, j)];
+            for (unsigned y = 0; y < size; y++) {
+                for (unsigned x = 0; x < size; x++) {
+                    tiling.get(i * size + y, j * size + x) =
+                            tiles[oriented_tile.first].data[oriented_tile.second].get(y, x);
+                }
+            }
+        }
+    }
+    return tiling;
+}
+
+/**
+* Translate the generic WFC result into the oriented_tiles pair
+*/
+auto id_to_oriented_tiles(Array2D<unsigned> ids) {
+        unsigned size = tiles[0].data[0].height;
+        Array2D<T> tiling(size * ids.height, size * ids.width);
+        std::vector<std::pair<unsigned, unsigned>> oriented_tiles_vec;
+        for (unsigned i = 0; i < ids.height; i++) {
+            for (unsigned j = 0; j < ids.width; j++) {
+                std::pair<unsigned, unsigned> oriented_tile =
+                        id_to_oriented_tile[ids.get(i, j)];
+                oriented_tiles_vec.push_back(oriented_tile);
+            }
+        }
+        return oriented_tiles_vec;
+}
+/***
+ * Translate the generic WFC result into ids
+ */
+auto oriented_tile_ids_to_id(std::vector<std::pair<unsigned, unsigned>> oriented_tiles_vec) {
+    Array2D<unsigned> ids(height, width);
+    unsigned size = tiles[0].data[0].height;
+    for (unsigned i = 0; i < height; i++) {
+        for (unsigned j = 0; j < width; j++) {
+            ids.get(i, j) = oriented_tile_ids[oriented_tiles_vec[i * width + j].first][oriented_tiles_vec[i * width + j].second];
+        }
+    }
+    return ids;
+}
+
+    void set_seed(unsigned seed) {
+        wfc.set_seed(seed);
+    }
+
     /**
    * Set the tile at a specific position.
    * Returns false if the given tile and orientation does not exist,
@@ -533,12 +581,14 @@ public:
   /**
    * Run the tiling wfc and return the result if the algorithm succeeded
    */
-  std::optional<Array2D<T>> run() {
+  // std::optional<Array2D<T>> run() {
+ std::optional<Array2D<unsigned >> run() {
     auto a = wfc.run();
     if (a == std::nullopt) {
       return std::nullopt;
     }
-    return id_to_tiling(*a);
+   return a;
+    // return id_to_tiling(*a);
   }
 
   Propagator get_propagator() {
@@ -549,15 +599,18 @@ public:
       wfc.set_propagator(propagator);
   }
 
-  std::optional<Array2D<T>> mutate(Wave base_wave, double new_weight) {
+
+//  std::optional<Array2D<T>> mutate(Wave base_wave, double new_weight) {
+std::optional<Array2D<unsigned >>  mutate(Wave base_wave, double new_weight) {
         wfc.mutate(base_wave, new_weight);
         auto a = wfc.run();
         if (a == std::nullopt) {
             return std::nullopt;
         }
-        return id_to_tiling(*a);
+        return a;
+//        return id_to_tiling(*a);
   }
 
 };
-
+} // namespace tilingwfc
 #endif // FAST_WFC_TILING_WFC_HPP_

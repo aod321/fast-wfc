@@ -42,6 +42,7 @@ double get_min_abs_half(const std::vector<double> &v) noexcept {
 
 } // namespace
 
+
 Wave::Wave(unsigned height, unsigned width,
      const std::vector<double> &patterns_frequencies) noexcept
   : patterns_frequencies(patterns_frequencies),
