@@ -6,15 +6,16 @@ namespace {
     /**
  * Normalize a vector so the sum of its elements is equal to 1.0f
  */
-    std::vector<double>& normalize(std::vector<double> v) {
+    std::vector<double> normalize(std::vector<double> v) {
         double sum = 0.0;
-        for (auto& e : v) {
+        std::vector<double> result;
+        for (auto e : v) {
             sum += e;
         }
-        for (auto& e : v) {
-            e /= sum;
+        for (auto e : v) {
+            result.push_back(e /= sum);
         }
-        return v;
+        return result;
     }
 
 /**
